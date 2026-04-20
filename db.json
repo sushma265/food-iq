@@ -1,0 +1,12 @@
+{
+  "users": {
+    "vallabhanenisushma17@gmail.com": {
+      "name": "sushma",
+      "email": "vallabhanenisushma17@gmail.com",
+      "passwordHash": "$2b$10$YfVaSroLyUTSdsPJtGyVt.6pdUGyAIsNxNfhUM8Vmb84ZV7sF9.tO",
+      "bmiDetails": null,
+      "foodLog": {},
+      "createdAt": "2026-04-20T08:19:55.576Z"
+    }
+  }
+}

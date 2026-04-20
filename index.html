@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FoodIQ — Nutrition Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark">
+
+<!-- ══════ NAVBAR ══════ -->
+<header class="navbar">
+  <div class="logo">Food<em>IQ</em></div>
+  <div class="nav-right">
+    <div class="nav-stat">Foods: <span id="totalCount">0</span></div>
+    <div class="nav-stat">Showing: <span id="showingCount">0</span></div>
+
+    <div id="authButtons">
+      <button class="auth-btn" onclick="openAuth('login')">Login</button>
+      <button class="auth-btn accent" onclick="openAuth('register')">Sign Up</button>
+    </div>
+
+    <div id="userMenu" style="display:none">
+      <span id="userGreeting" class="nav-stat"></span>
+      <button class="auth-btn" onclick="toggleStats()">📊 Stats</button>
+      <button class="auth-btn" onclick="openBMI()">⚖️ BMI</button>
+      <button class="auth-btn" onclick="openProfile()">👤 Profile</button>
+      <button class="auth-btn danger" onclick="logout()">Logout</button>
+    </div>
+
+    <button id="themeToggle" title="Toggle theme">🌙</button>
+  </div>
+</header>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-label">Nutrition Intelligence</div>
+  <h1>Know what<br/>you <em>eat.</em></h1>
+  <p class="hero-sub">Explore calories, macros, and nutritional data for 35+ foods — from street snacks to superfoods.</p>
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search any food…"/>
+    </div>
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="Indian">🍛 Indian</option>
+      <option value="Western">🍔 Western</option>
+      <option value="Healthy">🥗 Healthy</option>
+      <option value="Snack">🍿 Snack</option>
+    </select>
+  </div>
+</section>
+
+<!-- ══════ STATS BAR ══════ -->
+<div class="stats-bar">
+  <div class="stat-card"><div class="label">Avg. Calories</div><div class="value" id="avgCal">—</div><div class="sub">per serving</div></div>
+  <div class="stat-card"><div class="label">Highest Cal</div><div class="value" id="highCal">—</div><div class="sub" id="highCalName">—</div></div>
+  <div class="stat-card"><div class="label">Lowest Cal</div><div class="value" id="lowCal">—</div><div class="sub" id="lowCalName">—</div></div>
+  <div class="stat-card"><div class="label">Highest Protein</div><div class="value" id="highProt">—</div><div class="sub" id="highProtName">—</div></div>
+</div>
+
+<!-- ══════ TDEE BANNER ══════ -->
+<div id="tdeeBanner" style="display:none" class="tdee-banner">
+  <div class="tdee-left">
+    <span class="tdee-label">Daily Goal</span>
+    <span class="tdee-val"><span id="tdeeGoal">—</span> <small>kcal</small></span>
+  </div>
+  <div class="tdee-progress-wrap">
+    <div class="tdee-progress-track">
+      <div class="tdee-progress-bar" id="tdeeBar" style="width:0%"></div>
+    </div>
+    <div class="tdee-progress-labels">
+      <span id="tdeeConsumed">0 eaten</span>
+      <span id="tdeeRemaining">— remaining</span>
+    </div>
+  </div>
+  <button class="auth-btn" onclick="toggleLog()">📋 Today's Log</button>
+</div>
+
+<!-- ══════ FOOD LOG PANEL ══════ -->
+<div id="logPanel" style="display:none" class="log-panel">
+  <div class="log-header">
+    <div class="section-title" style="margin:0">Today's <em>Log</em></div>
+    <button class="close-btn" style="position:relative;top:auto;right:auto;flex-shrink:0" onclick="toggleLog()">✕</button>
+  </div>
+  <div id="logEntries" class="log-entries">
+    <p class="log-empty">No foods logged yet. Click a food card to log it!</p>
+  </div>
+  <div class="log-footer">
+    <div>
+      <span>Total: <strong id="logTotal">0</strong> kcal</span>
+      <span class="log-macro-tots">
+        <span id="logTotProtein"></span>
+        <span id="logTotCarbs"></span>
+        <span id="logTotFat"></span>
+      </span>
+    </div>
+    <span id="logVsTdee"></span>
+  </div>
+</div>
+
+<!-- ══════ WEEKLY STATS PANEL ══════ -->
+<div id="statsPanel" style="display:none" class="stats-panel">
+  <div class="log-header">
+    <div class="section-title" style="margin:0">Weekly <em>Stats</em></div>
+    <button class="close-btn" style="position:relative;top:auto;right:auto;flex-shrink:0" onclick="toggleStats()">✕</button>
+  </div>
+  <div class="stats-chart-wrap">
+    <div id="statsChartBars" class="stats-chart-bars"></div>
+  </div>
+  <div id="statsAvgSection" style="display:none" class="stats-avg-row">
+    <div class="stats-avg-card"><div class="bmi-res-label">Avg Calories</div><div class="bmi-res-val accent" id="statsAvgCal">—</div></div>
+    <div class="stats-avg-card"><div class="bmi-res-label">Avg Protein</div><div class="bmi-res-val" id="statsAvgProt">—</div></div>
+    <div class="stats-avg-card"><div class="bmi-res-label">Avg Carbs</div><div class="bmi-res-val" id="statsAvgCarb">—</div></div>
+    <div class="stats-avg-card"><div class="bmi-res-label">Avg Fat</div><div class="bmi-res-val" id="statsAvgFat">—</div></div>
+  </div>
+</div>
+
+<!-- ══════ FOODS ══════ -->
+<section class="foods-section">
+  <div class="sort-row">
+    <div class="section-title">Popular <em>Foods</em></div>
+    <div class="sort-btns">
+      <button class="sort-btn active" data-sort="default">Default</button>
+      <button class="sort-btn" data-sort="cal-asc">Cal ↑</button>
+      <button class="sort-btn" data-sort="cal-desc">Cal ↓</button>
+      <button class="sort-btn" data-sort="protein">Protein</button>
+      <button class="sort-btn" data-sort="az">A–Z</button>
+    </div>
+  </div>
+  <div class="food-grid" id="foodGrid"></div>
+</section>
+
+<!-- ══════ CHART ══════ -->
+<section class="chart-section">
+  <div class="section-title">Calorie <em>Chart</em></div>
+  <div class="chart-wrap">
+    <canvas id="calorieChart" height="90"></canvas>
+  </div>
+</section>
+
+<!-- ══════ FOOD MODAL ══════ -->
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal-content" id="modalContent">
+    <div class="modal-header">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      <div class="modal-badge" id="modalBadge"></div>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-cal"><strong id="modalCalNum"></strong> <span>calories per serving</span></div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-desc" id="modalDesc"></p>
+      <div class="macros-grid">
+        <div class="macro-card m-protein"><div class="m-label">Protein</div><div class="m-val" id="mProtein">—</div><div class="m-unit">grams</div></div>
+        <div class="macro-card m-carbs"><div class="m-label">Carbs</div><div class="m-val" id="mCarbs">—</div><div class="m-unit">grams</div></div>
+        <div class="macro-card m-fat"><div class="m-label">Fat</div><div class="m-val" id="mFat">—</div><div class="m-unit">grams</div></div>
+      </div>
+      <div class="macro-chart-row">
+        <div class="full-bar" id="modalBar"></div>
+        <div style="display:flex;gap:14px;font-size:.72rem;color:var(--muted)">
+          <span><span class="dot" style="background:#4ade80"></span>Protein</span>
+          <span><span class="dot" style="background:#60a5fa"></span>Carbs</span>
+          <span><span class="dot" style="background:#f472b6"></span>Fat</span>
+        </div>
+      </div>
+      <!-- Log section — shown when logged in -->
+      <div id="modalLogSection" style="display:none;margin-top:18px;border-top:1px solid var(--border);padding-top:16px">
+        <div class="log-servings-row">
+          <label style="font-size:.8rem;color:var(--muted);white-space:nowrap">Servings:</label>
+          <input type="number" id="modalServings" value="1" min="0.5" step="0.5"
+            style="width:70px;padding:6px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem"/>
+          <span id="modalCalPreview" style="font-size:.8rem;color:var(--muted)"></span>
+        </div>
+        <button class="auth-btn accent" style="width:100%;margin-top:10px;border-radius:10px;padding:10px;font-size:.9rem" onclick="logCurrentFood()">
+          + Log this food
+        </button>
+        <div id="modalLogMsg" style="font-size:.78rem;min-height:18px;margin-top:6px;text-align:center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ AUTH MODAL ══════ -->
+<div class="modal-overlay" id="authModal" onclick="closeAuthIfOverlay(event)">
+  <div class="modal-content auth-modal-content">
+    <button class="close-btn" onclick="closeAuth()">✕</button>
+    <div class="auth-tabs">
+      <button id="tabLogin" class="auth-tab active" onclick="switchTab('login')">Login</button>
+      <button id="tabReg"   class="auth-tab"        onclick="switchTab('register')">Sign Up</button>
+    </div>
+    <!-- Login -->
+    <div id="formLogin">
+      <h2 class="auth-title">Welcome back 👋</h2>
+      <p class="auth-sub">Login to track your BMI &amp; nutrition goals</p>
+      <div class="auth-field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com"/></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+      <div id="loginError" class="auth-error"></div>
+      <button class="auth-submit" onclick="doLogin()">Login</button>
+    </div>
+    <!-- Register -->
+    <div id="formReg" style="display:none">
+      <h2 class="auth-title">Create account 🌱</h2>
+      <p class="auth-sub">Start your personalised nutrition journey</p>
+      <div class="auth-field"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"/></div>
+      <div class="auth-field"><label>Email</label><input type="email" id="regEmail" placeholder="you@example.com"/></div>
+      <div class="auth-field"><label>Password</label><input type="password" id="regPass" placeholder="min 6 characters"/></div>
+      <div id="regError" class="auth-error"></div>
+      <button class="auth-submit" onclick="doRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ BMI MODAL ══════ -->
+<div class="modal-overlay" id="bmiModal" onclick="closeBMIIfOverlay(event)">
+  <div class="modal-content bmi-modal-content">
+    <button class="close-btn" onclick="closeBMI()">✕</button>
+    <h2 class="auth-title">BMI &amp; Calorie Profile ⚖️</h2>
+    <p class="auth-sub">Your personalised daily calorie goal &amp; macro targets</p>
+    <div class="bmi-form-grid">
+      <div class="auth-field"><label>Height (cm)</label><input type="number" id="bmiHeight" placeholder="e.g. 170" min="50" max="250"/></div>
+      <div class="auth-field"><label>Weight (kg)</label><input type="number" id="bmiWeight" placeholder="e.g. 65" min="10" max="500"/></div>
+      <div class="auth-field"><label>Age</label><input type="number" id="bmiAge" placeholder="e.g. 25" min="1" max="120"/></div>
+      <div class="auth-field"><label>Gender</label>
+        <select id="bmiGender"><option value="male">Male</option><option value="female">Female</option></select>
+      </div>
+    </div>
+    <div class="auth-field"><label>Activity Level</label>
+      <select id="bmiActivity">
+        <option value="sedentary">Sedentary (desk job, no exercise)</option>
+        <option value="light">Light (1–3 days/week)</option>
+        <option value="moderate">Moderate (3–5 days/week)</option>
+        <option value="active">Active (6–7 days/week)</option>
+        <option value="veryActive">Very Active (athlete / physical job)</option>
+      </select>
+    </div>
+    <div id="bmiError" class="auth-error"></div>
+    <button class="auth-submit" onclick="saveBMI()">Calculate &amp; Save</button>
+
+    <div id="bmiResults" style="display:none">
+      <hr class="bmi-divider"/>
+      <div class="bmi-results-grid">
+        <div class="bmi-result-card">
+          <div class="bmi-res-label">Your BMI</div>
+          <div class="bmi-res-val" id="resBMI">—</div>
+          <div class="bmi-res-category" id="resCat">—</div>
+        </div>
+        <div class="bmi-result-card">
+          <div class="bmi-res-label">BMR (at rest)</div>
+          <div class="bmi-res-val" id="resBMR">—</div>
+          <div class="bmi-res-sub">kcal / day</div>
+        </div>
+        <div class="bmi-result-card highlight">
+          <div class="bmi-res-label">Daily Goal (TDEE)</div>
+          <div class="bmi-res-val" id="resTDEE">—</div>
+          <div class="bmi-res-sub">kcal / day</div>
+        </div>
+      </div>
+
+      <!-- Macro targets -->
+      <div id="bmiTargetRow" style="display:none" class="macro-targets-row">
+        <div class="macro-tgt"><span class="dot" style="background:#4ade80"></span>Protein target <strong id="tgtProtein">—</strong></div>
+        <div class="macro-tgt"><span class="dot" style="background:#60a5fa"></span>Carbs target <strong id="tgtCarbs">—</strong></div>
+        <div class="macro-tgt"><span class="dot" style="background:#f472b6"></span>Fat target <strong id="tgtFat">—</strong></div>
+      </div>
+
+      <div class="bmi-scale">
+        <div class="bmi-scale-bar">
+          <div class="bmi-marker" id="bmiMarker"></div>
+        </div>
+        <div class="bmi-scale-labels">
+          <span>Underweight<br/>&lt;18.5</span>
+          <span>Normal<br/>18.5–25</span>
+          <span>Overweight<br/>25–30</span>
+          <span>Obese<br/>&gt;30</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PROFILE MODAL ══════ -->
+<div class="modal-overlay" id="profileModal" onclick="closeProfileIfOverlay(event)">
+  <div class="modal-content auth-modal-content">
+    <button class="close-btn" onclick="closeProfile()">✕</button>
+    <h2 class="auth-title">My Profile 👤</h2>
+    <p class="auth-sub">Update your name or change your password</p>
+    <div class="auth-field"><label>Full Name</label><input type="text" id="profileName" placeholder="Your name"/></div>
+    <div class="auth-field"><label>Email (read-only)</label><input type="email" id="profileEmail" readonly style="opacity:.5;cursor:not-allowed"/></div>
+    <hr class="bmi-divider"/>
+    <p class="auth-sub" style="margin-bottom:12px">Change password (optional)</p>
+    <div class="auth-field"><label>Current Password</label><input type="password" id="profileCurPass" placeholder="••••••••"/></div>
+    <div class="auth-field"><label>New Password</label><input type="password" id="profileNewPass" placeholder="min 6 characters"/></div>
+    <div id="profileMsg" class="auth-error" style="min-height:18px"></div>
+    <button class="auth-submit" onclick="saveProfile()">Save Changes</button>
+  </div>
+</div>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <div class="footer-logo">Food<em>IQ</em></div>
+  <p>© 2026 FoodIQ · Nutrition Intelligence · Eat Smart</p>
+  <p style="color:var(--muted);font-size:.75rem;">35+ foods · Macros · Calories · BMI · Food Log</p>
+</footer>
+
+<script src="script.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>
