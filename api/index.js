@@ -12,7 +12,6 @@ const app        = express();
 const PORT       = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'foodiq_secret_change_in_production';
 const DB_FILE    = path.join(__dirname, 'db.json');
-
 /* ══════════════════════════════════════════
    PERSISTENT JSON FILE STORE
    ══════════════════════════════════════════ */
@@ -317,7 +316,4 @@ app.get('/api/stats', auth, (req, res) => {
 /* ══════════════════════════════════════════
    START
    ══════════════════════════════════════════ */
-app.listen(PORT, () => {
-  console.log(`✅  FoodIQ backend  →  http://localhost:${PORT}`);
-  console.log(`    Persistent DB   →  ${DB_FILE}`);
-});
+module.exports = app;
