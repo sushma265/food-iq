@@ -64,12 +64,16 @@ FoodIQ is a full-stack nutrition tracking web application that helps users explo
 
 ---
 
+
+
 ## 📁 Project Structure
+
 
 FoodIQ/
 │
 ├── api/
-│   └── index.js
+│ └── index.js
+│
 ├── index.html
 ├── style.css
 ├── script.js
