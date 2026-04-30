@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════
    FoodIQ  —  Auth + BMI + Food Log + Stats  (frontend)
    ══════════════════════════════════════════════════════ */
-const API = 'http://localhost:3000/api';
+const API = '/api';
 
 /* ── Token / user helpers ── */
 const getToken  = ()    => localStorage.getItem('fiq_token');
