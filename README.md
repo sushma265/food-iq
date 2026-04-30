@@ -1,77 +1,137 @@
+Here is your **README.md in pure markdown format** (just copy & paste 👇):
 
-# 🍽️ FoodIQ – Understand What You Eat
+```md
+# 🍽️ FoodIQ — Nutrition Intelligence App
 
-
-## 📌 Project Overview
-
-FoodIQ is designed to promote **healthy eating awareness** by providing:
-
-* Calorie information
-* Basic nutrition facts
-* Short explanations for popular foods
-
-This project is suitable for **mini projects, hackathons, and academic submissions**.
+FoodIQ is a full-stack nutrition tracking web application that helps users explore food calories, track daily intake, calculate BMI, and monitor weekly nutrition stats.
 
 ---
 
-## 🎯 Features
-
-* 🔍 **Search Functionality**
-  Search for food items like *Idli, Pizza, Burger*, etc.
-
-* ⭐ **Popular Foods Section**
-  Displays commonly eaten foods with:
-
-  * Calories per serving
-  * Short nutritional description
-
-* 📊 **Nutrition Awareness**
-  Helps users understand calories, carbohydrates, proteins, fats, and fiber in simple language.
-
-* 📱 **User-Friendly Interface**
-  Clean, responsive, and easy to navigate.
+## 🚀 Live Demo
+🔗 https://food-iq-ruddy.vercel.app/
 
 ---
 
-## 🍛 Sample Food Data
+## ✨ Features
 
-| Food Item   | Calories               | Description                                        |
-| ----------- | ---------------------- | -------------------------------------------------- |
-| Idli        | 39 calories per piece  | Steamed South Indian food made from fermented rice |
-| Masala Dosa | 168 calories           | Crispy rice crepe with spiced potato filling       |
-| Veg Pasta   | 220 calories           | Rich in carbohydrates and fiber                    |
-| Salad Bowl  | 120 calories           | High in vitamins, minerals, and fiber              |
-| Pizza       | 285 calories per slice | Contains carbs, fats, and protein                  |
-| Burger      | 295 calories           | High energy food with protein and fats             |
+### 🥗 Food Explorer
+- Browse 35+ foods  
+- View calories, protein, carbs, fat  
+- Search & filter by category  
+
+### 🔐 Authentication
+- User registration & login  
+- JWT-based authentication  
+
+### ⚖️ BMI Calculator
+- Calculate BMI, BMR, and TDEE  
+- Personalized daily calorie goals  
+- Macro nutrient targets  
+
+### 📋 Food Logging
+- Log daily food intake  
+- Track calories & macros  
+- View total consumption  
+
+### 📊 Weekly Stats
+- 7-day nutrition summary  
+- Average calories & macros  
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠️ Tech Stack
 
-* **HTML5** – Structure of the website
-* **CSS3** – Styling and layout
-* **JavaScript** – Search and dynamic content
-  *(Optional: Can be extended using React, API integration, or backend)*
+### Frontend
+- HTML5  
+- CSS3  
+- JavaScript (Vanilla)  
+- Chart.js  
+
+### Backend
+- Node.js  
+- Express.js  
+- JWT Authentication  
+- bcryptjs  
+
+### Deployment
+- Vercel (Serverless)  
 
 ---
 
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```
+
 FoodIQ/
 │
-├── index.html
-├── style.css
-├── script.js
-└── README.md
+├── api/
+│   └── index.js        # Backend (Express API)
+│
+├── index.html          # Frontend UI
+├── style.css           # Styling
+├── script.js           # Main logic
+├── auth.js             # Authentication logic
+├── db.json             # Local storage (temporary)
+├── vercel.json         # Vercel config
+├── package.json
 
-🚀 Future Enhancements
+```
 
+---
 
-User login & diet tracking
-Food comparison feature
-BMI & calorie calculator
+## ⚙️ Setup & Run Locally
 
+### 1. Clone the repo
+```
 
+git clone [https://github.com/sushma265/food-iq)
+cd food-iq
 
+```
 
+### 2. Install dependencies
+```
+
+npm install
+
+```
+
+### 3. Run server
+```
+
+node server.js
+
+```
+
+### 4. Open in browser
+```
+
+https://food-iq-ruddy.vercel.app/
+```
+
+---
+
+## ⚠️ Important Notes
+
+- On Vercel, backend runs as **serverless functions**  
+- File system is **temporary**  
+- `db.json` is NOT persistent (data resets after deployment)  
+
+---
+
+## 🔮 Future Improvements
+
+- Use MongoDB / Firebase for persistent storage  
+- Add user profile dashboard  
+- Add more foods & API integration  
+- Improve UI/UX  
+
+---
+
+## 👨‍💻 Author
+Sushma  
+
+---
+
+## 📄 License
+This project is open-source and free to use.
